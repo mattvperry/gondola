@@ -1,0 +1,68 @@
+#!/usr/bin/env ruby
+
+# Gondola - gondola
+# Main executable file which will dish out projects in parallel
+# after converting them as needed
+
+require 'rubygems'
+require 'yaml'
+require 'cmdparse'
+
+lib_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib/'))
+$LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
+
+require 'gondola'
+
+# Command parsing stuff
+cmd = CmdParse::CommandParser.new(true, true)
+cmd.program_name = "gondola"
+cmd.program_version = Gondola::Version::STRING
+cmd.add_command(CmdParse::HelpCommand.new)
+cmd.add_command(CmdParse::VersionCommand.new)
+
+# Run command
+class RunCommand < CmdParse::Command
+  def initialize
+    super('run', false)
+    @opts = {}
+    self.short_desc = "Run an entire test suite or one test case"
+    # User supplied options for running a suite
+    self.options = CmdParse::OptionParserWrapper.new do |opt|
+      opt.on('-s', '--super_parallel', 'Execute all test cases at once') do |sp|
+        @opts[:super_parallel] = true
+      end
+      opt.on('-r', '--recursive', 'Execute all sub suites') do |r|
+        @opts[:recursive] = true
+      end
+      opt.on('-l', '--legacy', 'Allow legacy Gondola suites') do |l|
+        @opts[:legacy] = true
+      end
+    end
+  end
+
+  # Proper usage format
+  def usage
+    "Usage: #{commandparser.program_name} run [options] [tests]"
+  end
+
+  # Function that is executed when a user issues a run command
+  def execute(args)
+    if args.length < 1
+      puts run.usage
+      exit 1
+    end
+    test = args[0]
+    # Can either provide directory or file
+    if File.exists?(test)
+      runner = Gondola::TestRunner.new
+      runner.add_test(test)
+      runner.run(@opts)
+    else
+      puts "Could not find file \"#{test}\""
+    end
+  end
+end
+cmd.add_command(RunCommand.new)
+
+cmd.parse
+exit(0)
