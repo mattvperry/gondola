@@ -17,17 +17,10 @@ Jeweler::Tasks.new do |gem|
   gem.license = "MIT"
   gem.summary = %Q{Ruby command line utility and library for integrating the Selenium IDE more tightly with Sauce Labs' Ondemand services}
   gem.description = %Q{
-<<<<<<< HEAD
-  Gondola is Ruby command line utility and as well as a library  which helps
-  for integrate the Selenium IDE more tightly with Sauce Labs\' Ondemand services and
-  provide greater ease for those who would like to use both tools but do not have
-  enough technical knowledge
-=======
     Gondola is Ruby command line utility and as well as a library  which helps
-    for integrate the Selenium IDE more tightly with Sauce Labs\' Ondemand services and
+    for integrate the Selenium IDE more tightly with Sauce Labs' Ondemand services and
     provide greater ease for those who would like to use both tools but do not have
     enough technical knowledge
->>>>>>> origin/master
   }
   gem.email = "mperry@agoragames.com"
   gem.authors = ["Matthew Perry"]
@@ -59,11 +52,7 @@ end
 task :default => :test
 
 require 'rake/rdoctask'
-<<<<<<< HEAD
-  Rake::RDocTask.new do |rdoc|
-=======
 Rake::RDocTask.new do |rdoc|
->>>>>>> origin/master
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
@@ -71,7 +60,3 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
