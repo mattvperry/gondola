@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gondola}
-  s.version = "1.1.2"
+  s.version = "1.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matthew Perry"]
@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
     "examples/config.yml",
     "examples/gondola_agora_fail.html",
     "examples/gondola_agora_pass.html",
-    "examples/ondemand.yml",
+    "gondola.gemspec",
     "lib/gondola.rb",
     "lib/gondola/converter.rb",
     "lib/gondola/tester.rb",
