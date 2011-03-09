@@ -16,7 +16,7 @@ require 'gondola'
 # Command parsing stuff
 cmd = CmdParse::CommandParser.new(true, true)
 cmd.program_name = "gondola"
-cmd.program_version = Gondola::Version::STRING
+cmd.program_version = Gondola::VERSION
 cmd.add_command(CmdParse::HelpCommand.new)
 cmd.add_command(CmdParse::VersionCommand.new)
 
@@ -33,9 +33,6 @@ class RunCommand < CmdParse::Command
       end
       opt.on('-r', '--recursive', 'Execute all sub suites') do |r|
         @opts[:recursive] = true
-      end
-      opt.on('-l', '--legacy', 'Allow legacy Gondola suites') do |l|
-        @opts[:legacy] = true
       end
     end
   end

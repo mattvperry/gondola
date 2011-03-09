@@ -32,16 +32,14 @@ module Gondola
               prepend = "**/"
             end
             files = Dir.glob(prepend + "*.html")
-            if opts[:legacy] == true
-              files.concat(Dir.glob(prepend + "*.rb"))
-            end
+            files.concat(Dir.glob(prepend + "*.rb"))
             files.each do |file|
               conf = configure(File.expand_path(File.dirname(file)))
               run_test(file, conf)
             end
           else
             conf = configure(File.expand_path(File.dirname(test)))
-            run_test(file, conf)
+            run_test(test, conf)
           end
         end
       end
@@ -84,8 +82,13 @@ module Gondola
 
     # Function to run and parallelize the given test on the given browsers
     def run_test(file, conf)
-      # Initialize a converter object
-      converter = Gondola::Converter.new(file)
+      # Initialize a converter object based on filetype
+      converter = nil
+      if File.extname(file) == '.html'
+        converter = Gondola::HtmlConverter.new(file)
+      elsif File.extname(file) == '.rb'
+        converter = Gondola::LegacyConverter.new(file)
+      end
       # Set global information
       global = {}
       global[:job_name] = converter.name

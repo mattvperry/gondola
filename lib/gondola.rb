@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'gondola/converter'
+require 'gondola/html_converter'
+require 'gondola/legacy_converter'
 require 'gondola/tester'
 require 'gondola/testrunner'
 require 'gondola/version'

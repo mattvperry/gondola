@@ -24,7 +24,7 @@ Jeweler::Tasks.new do |gem|
   }
   gem.email = "mperry@agoragames.com"
   gem.authors = ["Matthew Perry"]
-  gem.version = Gondola::Version::STRING
+  gem.version = Gondola::VERSION
   # Dependencies in GemFile
 end
 Jeweler::RubygemsDotOrgTasks.new
@@ -53,7 +53,7 @@ task :default => :test
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
+  version = File.exist?('VERSION') ? File.read('VERSION') : Gondola::VERSION
 
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "gondola #{version}"

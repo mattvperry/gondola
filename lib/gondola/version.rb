@@ -1,9 +1,3 @@
 module Gondola
-  module Version
-    MAJOR = 1
-    MINOR = 1
-    PATCH = 3
-
-    STRING = [MAJOR, MINOR, PATCH].compact.join('.')
-  end
+    VERSION = "1.1.3"
 end
