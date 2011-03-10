@@ -73,10 +73,6 @@ module Gondola
           conf.merge! YAML.load_file(path)
         end
       end          
-      conf = conf.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
-      conf[:browsers].map! do |browser|
-        browser.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
-      end
       return conf
     end
 
@@ -95,6 +91,7 @@ module Gondola
       if conf[:project_name]
         global[:job_name] = "#{conf[:project_name]} - #{global[:job_name]}"
       end
+      global.merge! conf.select { |k,v| [:username, :access_key].include?(k) }
       global[:browser_url] = conf[:base_url]
       # Spawn n threads
       Parallel.map(conf[:browsers], :in_threads => conf[:browsers].size)do |browser|

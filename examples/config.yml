@@ -1,11 +1,11 @@
-project_name: "Test Project"
-base_url: "http://www.google.com"
-browsers:
+:project_name: "Test Project"
+:base_url: "http://www.google.com"
+:browsers:
   -
-    os: "Windows 2003"
-    browser: "firefox"
-    browser_version: "3.6"
+    :os: "Windows 2003"
+    :browser: "firefox"
+    :browser_version: "3.6"
   -
-    os: "Windows 2003"
-    browser: "iexplore"
-    browser_version: "8"
+    :os: "Windows 2003"
+    :browser: "iexplore"
+    :browser_version: "8"
