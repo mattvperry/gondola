@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gondola}
-  s.version = "1.1.4"
+  s.version = "1.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matthew Perry"]
-  s.date = %q{2011-03-09}
+  s.date = %q{2011-03-10}
   s.default_executable = %q{gondola}
   s.description = %q{
     Gondola is Ruby command line utility and as well as a library  which helps
