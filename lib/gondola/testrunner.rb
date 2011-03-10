@@ -91,7 +91,7 @@ module Gondola
       if conf[:project_name]
         global[:job_name] = "#{conf[:project_name]} - #{global[:job_name]}"
       end
-      global.merge! conf.select { |k,v| [:username, :access_key].include?(k) }
+      global.merge! conf.reject { |k,v| !([:username, :access_key].include?(k)) }
       global[:browser_url] = conf[:base_url]
       # Spawn n threads
       Parallel.map(conf[:browsers], :in_threads => conf[:browsers].size)do |browser|
