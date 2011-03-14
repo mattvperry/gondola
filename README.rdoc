@@ -1,6 +1,10 @@
-= gondola
+= Gondola
 
-WORK IN PROGRESS
+== Introduction
+
+== Installation
+
+== Integrating with an existing product
 
 == Contributing to gondola
  
