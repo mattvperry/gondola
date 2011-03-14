@@ -1,8 +1,20 @@
 = Gondola
 
-== Introduction
+Gondola is a ruby gem which aims to bridge the gap between two very prominent, open source, quality assurance tools, Selenium IDE and Sauce Labs.
+Many quality assurance professionals who don't have the necessary technical skills to write Selenium webdriver-based unit tests prefer to do their
+web regression testing using solely the Selenium IDE and then exporting those test cases by some means to Sauce Labs' system.
+
+Gondola offers an easier and more convenient system for dispatching tests written in Selenium IDE to a Sauce Labs account. Gondola transforms the html
+that Selenium IDE produces by default and ships it to Sauce Labs across a number of browsers in parallel. Test suites and projects can be easily organized
+with simple file directory structures.
+
+Beyond the console application that comes with the gem, Gondola offers a small API for integrating Gondola's features into custom web apps. This allows
+a user to bring Gondola's simplicity into an existing testing suite or a new web application. Specifically, we have a plan to write a sample Gondola web
+app to demonstrate its power.  
 
 == Installation
+
+== Basic Use
 
 == Integrating with an existing product
 
