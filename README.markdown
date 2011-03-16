@@ -47,13 +47,13 @@ The `[tests]` attribute refers to a list of test cases or test suites:
 
 ### Integrating with an existing product
 
-  require 'rubygems'
-  require 'gondola'
+    require 'rubygems'
+    require 'gondola'
 
-  runner = Gondola::TestRunner.new
-  runner.add_test "example.html"
-  runner.run({:base_url => "http://www.google.com, browsers => [{:os => "Windows 2003", :browser => "firefox", :browser_version => "3.6"},
-                                                                {:os => "Windows 2003", :browser => "iexplore", :browser_version => "8" }]}})
+    runner = Gondola::TestRunner.new
+    runner.add_test "example.html"
+    runner.run({:base_url => "http://www.google.com, browsers => [{:os => "Windows 2003", :browser => "firefox", :browser_version => "3.6"},
+                                                                  {:os => "Windows 2003", :browser => "iexplore", :browser_version => "8" }]}})
 
 The above code does several things:
 
