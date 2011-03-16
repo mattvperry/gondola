@@ -16,7 +16,7 @@ app to demonstrate its power.
 
     $ gem install gondola
 
-Note: You may run into problems if rubygems' executable path is not in your `$PATH` environment variable. See rubygems' documentation
+NOTE: You may run into problems if rubygems' executable path is not in your `$PATH` environment variable. See rubygems' documentation
 for more details.
 
 ## Usage
@@ -39,8 +39,11 @@ The available `[options]` are:
 * `-r` or `--recursive`: This activates recursive search mode. When you supply Gondola with a directory containing tests, using this option will
   enable sub directory searching.
 
-The `[tests]` attribute refers to a list of test cases or test suites. Test cases can either be in HTML format (Selenium IDE saves) or in ruby format which
-is just a bunch of commands that you would like to execute. The ruby test case feature is under construction and should not be used at the moment.
+The `[tests]` attribute refers to a list of test cases or test suites:
+
+* Test cases can either be in HTML format (Selenium IDE saves) or in ruby format which is just a bunch of commands that you would like to execute. 
+  * NOTE: The ruby test case feature is under construction and should not be used at the moment.
+* Test suites are directories that contain many test cases.
 
 ## Integrating with an existing product
 
