@@ -14,7 +14,8 @@ app to demonstrate its power.
 
 ## Installation
 
-   gem install gondola
+    $ gem install gondola
+
 Note: You may run into problems if rubygems' executable path is not in your `$PATH` environment variable. See rubygems' documentation
 for more details.
 
