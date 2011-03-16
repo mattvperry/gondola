@@ -47,8 +47,9 @@ module Gondola
               end
             end
           else
+            file = File.basename(test)
             Dir.chdir(File.dirname(test)) do
-                converter,global,browsers = aggregate_data(test, opts)
+                converter,global,browsers = aggregate_data(file, opts)
                 run_test(converter, global, browsers)
             end
           end
@@ -93,8 +94,8 @@ module Gondola
       end
       # Load any config files in the current directory only if
       # a config hasn't already been found
+      conf = {}
       Dir.chdir(file) do
-        conf = {}
         if api
           if File.exists? "ondemand.yml"
             conf.merge! YAML.load_file("ondemand.yml")

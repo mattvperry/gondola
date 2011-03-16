@@ -7,9 +7,6 @@ module Gondola
   class Tester
     attr_reader :cmd_num, :sel, :converter, :job_id
 
-    class AssertionFailed < StandardError
-    end
-
     def initialize(sel, converter)
       @sel = sel
       @converter = converter
@@ -21,9 +18,12 @@ module Gondola
       @job_id = @sel.session_id
       begin
         eval(@converter.ruby)
-      rescue AssertionFailed 
+      rescue => e
+        $stderr.puts e.message + " - stopping test."
+      rescue Selenium::Client::CommandError
+      ensure
+        @sel.stop()
       end
-      @sel.stop()
     end
 
     def cmd_inc
@@ -32,25 +32,25 @@ module Gondola
 
     def assert(expr)
       unless verify(expr)
-        raise AssertionFailed
+        raise "Assertion Failed"
       end
     end
 
     def assert_not(expr)
       unless verifyNot(expr)
-        raise AssertionFailed
+        raise "Assertion Failed"
       end
     end
 
     def assert_eq(eq, expr)
       unless verify(eq, expr)
-        raise AssertionFailed
+        raise "Assertion Failed"
       end
     end
 
     def assert_not_eq(eq, expr)
       unless verifyNot(eq, expr)
-        raise AssertionFailed
+        raise "Assertion Failed"
       end
     end
 
