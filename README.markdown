@@ -32,7 +32,7 @@ Will get you started with the basic commands available. The most used and main f
 
     $ gondola run [options] [tests]
 
-The available `[options] are:
+The available `[options]` are:
 * `-s` or `--super_parallel`: This activates "super\_parallel" mode which will not only execute all browsers in parallel but also all the
   test cases. This mode is experimental and may slow down Sauce Labs considerably. Use at your own risk.
 * `-r` or `--recursive`: This activates recursive search mode. When you supply Gondola with a directory containing tests, using this option will
