@@ -45,7 +45,21 @@ The `[tests]` attribute refers to a list of test cases or test suites:
   * NOTE: The ruby test case feature is under construction and should not be used at the moment.
 * Test suites are directories that contain many test cases.
 
-## Integrating with an existing product
+### Integrating with an existing product
+
+  require 'rubygems'
+  require 'gondola'
+
+  runner = Gondola::TestRunner.new
+  runner.add_test "example.html"
+  runner.run({:base_url => "http://www.google.com, browsers => [{:os => "Windows 2003", :browser => "firefox", :browser_version => "3.6"},
+                                                                {:os => "Windows 2003", :browser => "iexplore", :browser_version => "8" }]}})
+
+The above code does several things:
+
+* `runner.add_test "example.html"` adds the test case "example.html" to the list of tests that this runner will execute when you tell it to
+* `runner.run(opts={})` runs all the tests that you've added with the options specified. The list of available options is long and a work in progress
+  with the rest of the documentation.
 
 ## Contributing to gondola
  
