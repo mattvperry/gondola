@@ -45,18 +45,19 @@ class RunCommand < CmdParse::Command
   # Function that is executed when a user issues a run command
   def execute(args)
     if args.length < 1
-      puts run.usage
+      puts usage
       exit 1
     end
-    test = args[0]
     # Can either provide directory or file
-    if File.exists?(test)
-      runner = Gondola::TestRunner.new
-      runner.add_test(test)
-      runner.run(@opts)
-    else
-      puts "Could not find file \"#{test}\""
+    runner = Gondola::TestRunner.new
+    args.each do |t| 
+      if File.exists? t
+        runner.add_test t
+      else
+        puts "Could not find \"#{t}\""
+      end
     end
+    runner.run(@opts)
   end
 end
 cmd.add_command(RunCommand.new)
