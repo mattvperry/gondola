@@ -32,7 +32,8 @@ NOTE: Make sure that you configure your Sauce Labs username and access key by do
 
 * or create an ondemand.yml file in the directory structure of your tests:
 
-    code
+        :username: [username]
+        :access_key: [access-key]
 
 before using Gondola in any capacity.
 
