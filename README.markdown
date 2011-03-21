@@ -24,6 +24,17 @@ for more details.
 Gondola offers a simplistic command line application for quickly debugging tests written in the Selenium IDE. Gondola also offers a short and sweet API for
 integrating Gondola's features into any other application.
 
+NOTE: Make sure that you configure your Sauce Labs username and access key by doing one of two things:
+
+* Issue a command to the Sauce Labs gem:
+`sauce configure [username] [access-key]`
+* or create an ondemand.yml file in the directory structure of your tests:
+
+    :username: [username]
+    :access_key: [access-key]
+
+before using Gondola in any capacity.
+
 ### Getting started
 
     $ gondola help
