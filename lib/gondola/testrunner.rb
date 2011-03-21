@@ -2,9 +2,6 @@
 #   A wrapper for all the tasks required for launching a run
 #   of a test suite or test case on several browsers
 
-require 'rubygems'
-require 'gondola'
-
 module Gondola
   class TestRunner
     attr_reader :tests
@@ -66,7 +63,7 @@ module Gondola
       if File.extname(file) == '.html'
         converter = Gondola::HtmlConverter.new(file)
       elsif File.extname(file) == '.rb'
-        converter = Gondola::LegacyConverter.new(file)
+        converter = Gondola::Converter.new(file)
       end
       # Load file config data
       conf = config_from_file(file)

@@ -42,13 +42,13 @@ module Gondola
       end
     end
 
-    def assert_eq(eq, expr)
+    def assert_equal(eq, expr)
       unless verify(eq, expr)
         raise "Assertion Failed"
       end
     end
 
-    def assert_not_eq(eq, expr)
+    def assert_not_equal(eq, expr)
       unless verifyNot(eq, expr)
         raise "Assertion Failed"
       end
@@ -70,7 +70,7 @@ module Gondola
       return true
     end
 
-    def verify_eq(eq, expr)
+    def verify_equal(eq, expr)
       unless eq == expr
         @stderr.puts "Command #{@cmd_num} returned '#{expr}', expecting '#{eq}'"
         return false
@@ -78,7 +78,7 @@ module Gondola
       return true
     end
 
-    def verify_not_eq(eq, expr)
+    def verify_not_equal(eq, expr)
       if eq == expr
         @stderr.puts "Command #{@cmd_num} returned '#{expr}', expecting '#{eq}'"
         return false

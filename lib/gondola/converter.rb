@@ -4,20 +4,22 @@
 
 module Gondola
   class Converter
+    attr_writer :name
+    attr_reader :file
+
     # Constructor that opens a file
     def initialize(filename, sel="@sel")
       File.open(filename, "r") do |f|
         @body = f.read
       end
       @s_obj = sel
+      @file = filename
       ruby()
     end
 
-    # Function: name
-    # Returns the name of this test case
     def name
       unless @name
-        @name = "Abstract Converter"
+        @name = @file
       end
       @name
     end
@@ -27,7 +29,7 @@ module Gondola
     # and returns valid selenium ruby code
     def ruby
       unless @ruby
-        @ruby = "puts 'This is an abstract converter, do not use this.'"
+        @ruby = @body.gsub(/.*/, "\\&\ncmd_inc\n")
       end  
       @ruby
     end

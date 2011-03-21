@@ -1,11 +1,9 @@
 # Gondola - html_converter.rb:
 #   Class definition for turning Selenium HTML into
 #   webdriver ruby code
-require 'rubygems'
-require 'gondola'
 
 module Gondola
-  class HtmlConverter < Converter
+  class HtmlConverter < Gondola::Converter
     # Function: name
     # Returns the name of this test case
     def name
@@ -92,7 +90,7 @@ module Gondola
             var = args[1]
             extra = "(#{args[0]})"
           end
-          retval = "#{tester}_eq #{var}, #{@s_obj}.get_#{underscore(string)}" + extra
+          retval = "#{tester}_equal #{var}, #{@s_obj}.get_#{underscore(string)}" + extra
         end
 
         # All commands return arrays that need to be joined
