@@ -29,7 +29,10 @@ module Gondola
     # and returns valid selenium ruby code
     def ruby
       unless @ruby
-        @ruby = @body.gsub(/.*/, "\\&\ncmd_inc\n")
+        @ruby = ""
+        enum = @body.lines
+        enum = enum.map { |l| l + "cmd_inc\n" }
+        enum.each { |l| @ruby << l }
       end  
       @ruby
     end
