@@ -28,7 +28,7 @@ NOTE: Make sure that you configure your Sauce Labs username and access key by do
 
 * Issue a command to the Sauce Labs gem:
 
-`sauce configure [username] [access-key]`
+    sauce configure [username] [access-key]
 
 * or create an ondemand.yml file in the directory structure of your tests:
 
