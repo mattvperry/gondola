@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gondola}
-  s.version = "1.1.7"
+  s.version = "1.1.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matthew Perry"]
-  s.date = %q{2011-03-16}
+  s.date = %q{2011-03-21}
   s.default_executable = %q{gondola}
   s.description = %q{
     Gondola is Ruby command line utility and as well as a library  which helps
@@ -38,7 +38,6 @@ Gem::Specification.new do |s|
     "lib/gondola.rb",
     "lib/gondola/converter.rb",
     "lib/gondola/html_converter.rb",
-    "lib/gondola/legacy_converter.rb",
     "lib/gondola/tester.rb",
     "lib/gondola/testrunner.rb",
     "lib/gondola/version.rb",
@@ -48,7 +47,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/perrym5/gondola}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.1}
+  s.rubygems_version = %q{1.6.0}
   s.summary = %q{Ruby command line utility and library for integrating the Selenium IDE more tightly with Sauce Labs' Ondemand services}
   s.test_files = [
     "test/helper.rb",
