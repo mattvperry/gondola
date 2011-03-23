@@ -4,10 +4,11 @@
 
 module Gondola
   class TestRunner
-    attr_reader :tests
+    attr_reader :tests, :results
 
     def initialize
       @tests = []
+      @results = []
     end
 
     # Function to add a test to the member array of
@@ -123,11 +124,17 @@ module Gondola
         # Begin test using a tester object
         tester = Gondola::Tester.new(selenium, converter)
         browser_string = "#{request[:os]} #{request[:browser]} #{request[:browser_version]}"
-        puts "Starting test case \"#{converter.name}\" with: #{browser_string}"
+        puts "Starting test \"#{converter.name}\" with #{browser_string}"
         tester.begin
-        puts "#{converter.name} finished - Sauce Job ID: #{tester.job_id}"
+        puts "Test \"#{converter.name}\" on #{browser_string} finished with #{tester.errors.size} error(s)"
+        result = { :name => converter.name, :browser => browser_string, :id => tester.job_id }
+        if tester.errors.empty?
+          result[:result] = "OK"
+        else
+          result[:result] = tester.errors
+        end
+        @results.push(result)
       end
-      puts
     end
   end
 end

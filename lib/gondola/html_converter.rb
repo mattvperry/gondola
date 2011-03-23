@@ -42,9 +42,16 @@ module Gondola
             elsif cmd[2] != ""
               cmd[2] = cmd[2].inspect
             end
-            # Append commands to a result string
+
+            # Append commands to a result string and to
+            # the internal list of commands
             args = [ cmd[1], cmd[2] ]
-            @ruby << html_to_ruby(cmd[0], args)
+            selenese = "#{cmd[0]}(#{cmd[1]}"
+            selenese = selenese + ", #{cmd[2]}" if cmd[2] != ""
+            selenese = selenese + ")"
+            ruby = html_to_ruby(cmd[0], args)
+            @commands.push({ :original => selenese, :ruby => ruby })
+            @ruby << ruby
             @ruby << "\ncmd_inc\n"
           end
         end         

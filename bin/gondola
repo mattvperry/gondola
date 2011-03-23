@@ -58,6 +58,24 @@ class RunCommand < CmdParse::Command
       end
     end
     runner.run(@opts)
+    puts
+    runner.results.each do |r|
+      puts "Sauce Labs ID: #{r[:id]}"
+      puts "Test Name: #{r[:name]}"
+      puts "Browser: #{r[:browser]}"
+      if r[:result] == "OK"
+        puts "Test Passed"
+      else
+        puts "Test Failed - #{r[:result].size} error(s)"
+        r[:result].each_with_index do |e,i|
+          puts "- Error #{i+1}:"
+          puts "    Selenese Command: #{e[:command][:original]}" if e[:command][:original]
+          puts "    Ruby Command: #{e[:command][:ruby]}" if e[:command][:ruby]
+          puts "    #{e[:error]}"
+        end
+      end
+      puts
+    end
   end
 end
 cmd.add_command(RunCommand.new)

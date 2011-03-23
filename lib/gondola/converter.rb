@@ -5,13 +5,14 @@
 module Gondola
   class Converter
     attr_writer :name
-    attr_reader :file
+    attr_reader :file, :commands
 
     # Constructor that opens a file
     def initialize(filename, sel="@sel")
       File.open(filename, "r") do |f|
         @body = f.read
       end
+      @commands = []
       @s_obj = sel
       @file = filename
       ruby()
@@ -31,8 +32,11 @@ module Gondola
       unless @ruby
         @ruby = ""
         enum = @body.lines
-        enum = enum.map { |l| l + "cmd_inc\n" }
-        enum.each { |l| @ruby << l }
+        enum.each do |l|
+          @commands.push({ :ruby => l })
+          l = l + "cmd_inc\n"
+          @ruby << l
+        end
       end  
       @ruby
     end
