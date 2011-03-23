@@ -37,19 +37,19 @@ module Gondola
     end
 
     def assert_not(expr)
-      unless verifyNot(expr)
+      unless verify_not(expr)
         raise "Assertion Failed"
       end
     end
 
     def assert_equal(eq, expr)
-      unless verify(eq, expr)
+      unless verify_equal(eq, expr)
         raise "Assertion Failed"
       end
     end
 
     def assert_not_equal(eq, expr)
-      unless verifyNot(eq, expr)
+      unless verify_not_equal(eq, expr)
         raise "Assertion Failed"
       end
     end

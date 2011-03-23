@@ -83,7 +83,7 @@ module Gondola
 
     # Function to read any config files which contain data for this
     # test case or suite
-    def config_from_file(file, api=true, data=true)
+    def config_from_file(file, api=true)
       # If the given test is just a file then start your search in
       # its parent directory
       unless File.directory? file
@@ -99,17 +99,15 @@ module Gondola
             api = false
           end
         end
-        if data
-          if File.exists? "config.yml"
-            conf.merge! YAML.load_file("config.yml")
-            data = false
-          end
+        if File.exists? "config.yml"
+          conf.merge! YAML.load_file("config.yml")
+          data = false
         end
       end
       # Recurse through the parent directories and merge the
       # current configuration
       unless file == File.dirname(file)
-        return config_from_file(File.expand_path(File.dirname(file)), api, data).merge(conf)
+        return config_from_file(File.expand_path(File.dirname(file)), api).merge(conf)
       end
       return conf
     end
