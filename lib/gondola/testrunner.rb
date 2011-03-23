@@ -87,7 +87,7 @@ module Gondola
       # If the given test is just a file then start your search in
       # its parent directory
       unless File.directory? file
-        return config_from_file(File.dirname(file))
+        return config_from_file(File.expand_path(File.dirname(file)))
       end
       # Load any config files in the current directory only if
       # a config hasn't already been found
@@ -109,7 +109,7 @@ module Gondola
       # Recurse through the parent directories and merge the
       # current configuration
       unless file == File.dirname(file)
-        return config_from_file(File.dirname(file), api, data).merge(conf)
+        return config_from_file(File.expand_path(File.dirname(file)), api, data).merge(conf)
       end
       return conf
     end
