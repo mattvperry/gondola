@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gondola}
-  s.version = "1.1.9.pre2"
+  s.version = "1.2.0"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matthew Perry"]
-  s.date = %q{2011-03-23}
+  s.date = %q{2011-03-24}
   s.default_executable = %q{gondola}
   s.description = %q{
     Gondola is Ruby command line utility and as well as a library  which helps
@@ -31,9 +31,6 @@ Gem::Specification.new do |s|
     "README.markdown",
     "Rakefile",
     "bin/gondola",
-    "examples/config.yml",
-    "examples/gondola_agora_fail.html",
-    "examples/gondola_agora_pass.html",
     "gondola.gemspec",
     "lib/gondola.rb",
     "lib/gondola/converter.rb",
@@ -42,7 +39,17 @@ Gem::Specification.new do |s|
     "lib/gondola/testrunner.rb",
     "lib/gondola/version.rb",
     "test/helper.rb",
-    "test/test_gondola.rb"
+    "test/test_converter.rb",
+    "test/test_fail.rb",
+    "test/test_pass.rb",
+    "test/test_projects/config.yml",
+    "test/test_projects/example1/config.yml",
+    "test/test_projects/example1/gondola_agora_fail.html",
+    "test/test_projects/example1/gondola_agora_pass.html",
+    "test/test_projects/example2/config.yml",
+    "test/test_projects/example2/gondola_agora_fail.rb",
+    "test/test_projects/example2/gondola_agora_pass.rb",
+    "test/test_testrunner.rb"
   ]
   s.homepage = %q{http://github.com/perrym5/gondola}
   s.licenses = ["MIT"]
@@ -51,7 +58,12 @@ Gem::Specification.new do |s|
   s.summary = %q{Ruby command line utility and library for integrating the Selenium IDE more tightly with Sauce Labs' Ondemand services}
   s.test_files = [
     "test/helper.rb",
-    "test/test_gondola.rb"
+    "test/test_converter.rb",
+    "test/test_fail.rb",
+    "test/test_pass.rb",
+    "test/test_projects/example2/gondola_agora_fail.rb",
+    "test/test_projects/example2/gondola_agora_pass.rb",
+    "test/test_testrunner.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -63,12 +75,16 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
+      s.add_development_dependency(%q<vcr>, ["~> 1.7.1"])
+      s.add_development_dependency(%q<fakeweb>, ["~> 1.3.0"])
     else
       s.add_dependency(%q<sauce>, [">= 0.17.5"])
       s.add_dependency(%q<parallel>, [">= 0.5.2"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
+      s.add_dependency(%q<vcr>, ["~> 1.7.1"])
+      s.add_dependency(%q<fakeweb>, ["~> 1.3.0"])
     end
   else
     s.add_dependency(%q<sauce>, [">= 0.17.5"])
@@ -76,6 +92,8 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
+    s.add_dependency(%q<vcr>, ["~> 1.7.1"])
+    s.add_dependency(%q<fakeweb>, ["~> 1.3.0"])
   end
 end
 
