@@ -1,5 +1,7 @@
 # Sensitive data
 ondemand.yml
+failing_*
+passing_*
 
 # rcov generated
 coverage

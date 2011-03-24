@@ -1,0 +1,9 @@
+:browsers:
+  -
+    :os: "Windows 2003"
+    :browser: "firefox"
+    :browser_version: "3.6"
+  -
+    :os: "Windows 2003"
+    :browser: "iexplore"
+    :browser_version: "8"

@@ -20,7 +20,7 @@ module Gondola
 
     def name
       unless @name
-        @name = @file
+        @name = File.basename(@file, ".rb")
       end
       @name
     end
