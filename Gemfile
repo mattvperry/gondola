@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "sauce", ">=0.17.5"
+gem "sauce", ">=0.19.0"
 gem "parallel", ">=0.5.2"
 
 group :development do
