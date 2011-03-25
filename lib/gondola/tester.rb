@@ -4,6 +4,9 @@
 #   the need for a unit testing framework
 
 module Gondola
+  class AssertionError < RuntimeError
+  end
+
   class Tester
     attr_reader :cmd_num, :errors, :job_id
     attr_accessor :sel
@@ -20,13 +23,20 @@ module Gondola
         @sel.start()
         @job_id = @sel.session_id
         eval(@converter.ruby)
-      rescue RuntimeError => e
-        $stderr.puts e.message
+      rescue AssertionError => e
+      rescue ::Selenium::Client::CommandError => e
+        @errors.push({ :command => @converter.commands[@cmd_num],
+                       :error => e.message })
       ensure
         begin
+          if @errors.empty?
+            @sel.passed!
+          else
+            @sel.failed!
+          end
           @sel.stop()
-        rescue Selenium::Client::CommandError => e
-          $stderr.puts e.message + "(Most likely, the test was closed on Sauce Labs' end)"
+        rescue ::Selenium::Client::CommandError => e
+          $stderr.puts e.message + "(Most likely, the test was closed early on Sauce Labs' end)"
         end
       end
     end
@@ -38,27 +48,19 @@ module Gondola
     end
 
     def assert(expr)
-      unless verify(expr)
-        raise "Assertion Failed"
-      end
+      raise AssertionError, "Assertion Failed" unless verify(expr)
     end
 
     def assert_not(expr)
-      unless verify_not(expr)
-        raise "Assertion Failed"
-      end
+      raise AssertionError, "Assertion Failed" unless verify_not(expr)
     end
 
     def assert_equal(eq, expr)
-      unless verify_equal(eq, expr)
-        raise "Assertion Failed"
-      end
+      raise AssertionError, "Assertion Failed" unless verify_equal(eq, expr)
     end
 
     def assert_not_equal(eq, expr)
-      unless verify_not_equal(eq, expr)
-        raise "Assertion Failed"
-      end
+      raise AssertionError, "Assertion Failed" unless verify_not_equal(eq, expr)
     end
 
     def verify(expr)

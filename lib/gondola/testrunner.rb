@@ -120,7 +120,7 @@ module Gondola
         # Add global information to this request
         request.merge! global
         # Request a new selenium object from Sauce
-        selenium = Sauce::Selenium.new(request)
+        selenium = Gondola::Selenium.new(request)
         # Begin test using a tester object
         tester = Gondola::Tester.new(selenium, converter)
         browser_string = "#{request[:os]} #{request[:browser]} #{request[:browser_version]}"

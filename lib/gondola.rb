@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'gondola/selenium'
 require 'gondola/converter'
 require 'gondola/html_converter'
 require 'gondola/tester'
