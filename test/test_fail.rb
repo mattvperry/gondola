@@ -17,6 +17,7 @@ class TestFail < Test::Unit::TestCase
       VCR.use_cassette('failing_test1', :record => :new_episodes) do
         @runner.run({ :browsers => [{:os => "Windows 2003", :browser => "firefox", :browser_version => "3.6"}] })
         expected = [{
+          :cmd_num=>12,
           :command=>{
             :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")\n"
           }, 
@@ -38,6 +39,7 @@ class TestFail < Test::Unit::TestCase
       VCR.use_cassette('failing_test2', :record => :new_episodes) do
         @runner.run({ :browsers => [{:os => "Windows 2003", :browser => "firefox", :browser_version => "3.6"}] })
         expected = [{
+          :cmd_num=>11,
           :command=>{
             :selenese=>"assertTextPresent(\"Producer FAIL\")", 
             :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")"

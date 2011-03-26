@@ -25,6 +25,7 @@ class RunCommand < CmdParse::Command
   def initialize
     super('run', false)
     @opts = {}
+    @quiet = false
     self.short_desc = "Run an entire test suite or one test case"
     # User supplied options for running a suite
     self.options = CmdParse::OptionParserWrapper.new do |opt|
@@ -32,7 +33,7 @@ class RunCommand < CmdParse::Command
         @opts[:recursive] = true
       end
       opt.on('-q', '--quiet', 'Execute quietly') do |q|
-        @opts[:quiet] = true
+        @quiet = true
       end
     end
   end
@@ -50,7 +51,7 @@ class RunCommand < CmdParse::Command
       puts "#{result[:id]}: Started test \"#{result[:name]}\" with #{bs}"
     else
       num = result[:errors].size
-      puts "#{result[:id]}: \"#{result[:name]} with #{bs}has completed with #{num} errors"
+      puts "#{result[:id]}: \"#{result[:name]}\" with #{bs}has completed with #{num} errors"
     end
   end
     
@@ -68,7 +69,7 @@ class RunCommand < CmdParse::Command
       else
         puts "Test Failed - #{r[:errors].size} error(s)"
         r[:errors].each_with_index do |e,i|
-          puts "- Error #{i+1}:"
+          puts "- Error #{i+1}, Command Number #{e[:cmd_num]}:"
           e[:command].each_pair { |k,v| puts "    #{k.to_s} command: #{v}" }
           puts "    #{e[:error]}"
         end
@@ -85,7 +86,7 @@ class RunCommand < CmdParse::Command
     end
     # Can either provide directory or file
     runner = Gondola::SuiteRunner.new
-    runner.add_observer(self) unless @opts[:quiet]
+    runner.add_observer(self) unless @quiet
     args.each do |t| 
       if File.exists? t
         runner.add_test t
@@ -93,8 +94,9 @@ class RunCommand < CmdParse::Command
         puts "Could not find \"#{t}\""
       end
     end
+    puts "Contacting Sauce Labs, please wait..." unless @quiet
     runner.run(@opts)
-    report(runner.results) unless @opts[:quiet]
+    report(runner.results) unless @quiet
   end
 end
 cmd.add_command(RunCommand.new)

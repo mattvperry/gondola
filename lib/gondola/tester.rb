@@ -9,7 +9,6 @@ module Gondola
 
   class Tester
     attr_reader :cmd_num, :errors, :job_id, :status
-    attr_accessor :sel
 
     def initialize(req, converter)
       @sel = Gondola::Selenium.new req
@@ -25,8 +24,7 @@ module Gondola
         @job_id = @sel.session_id
         @status = :in_progress
       rescue ::Selenium::Client::CommandError => e
-        @errors.push({ :command => @converter.commands[@cmd_num],
-                       :error => e.message })
+        add_error e.message
         finish
       end
       @job_id
@@ -36,10 +34,9 @@ module Gondola
     def begin
       begin
         eval(@converter.ruby)
-      rescue AssertionError => e
+      rescue AssertionError
       rescue ::Selenium::Client::CommandError => e
-        @errors.push({ :command => @converter.commands[@cmd_num],
-                       :error => e.message })
+        add_error e.message
       ensure
         finish
       end
@@ -67,56 +64,42 @@ module Gondola
       @cmd_num+=1
     end
 
-    def assert(expr)
-      raise AssertionError, "Assertion Failed" unless verify(expr)
+    # Add the current command to the error list
+    # with the given description
+    def add_error(desc)
+      @errors.push({ 
+        :cmd_num => @cmd_num,
+        :command => @converter.commands[@cmd_num],
+        :error => desc 
+      })
     end
 
-    def assert_not(expr)
-      raise AssertionError, "Assertion Failed" unless verify_not(expr)
-    end
-
-    def assert_equal(eq, expr)
-      raise AssertionError, "Assertion Failed" unless verify_equal(eq, expr)
-    end
-
-    def assert_not_equal(eq, expr)
-      raise AssertionError, "Assertion Failed" unless verify_not_equal(eq, expr)
+    # Handle all the assert functions by just making the respective
+    # verify call and throwing an exception to end the flow
+    def method_missing(method, *args)
+      if method.to_s =~ /^assert(.*)/
+        raise AssertionError unless send "verify#{$1}".to_sym, *args
+      end
     end
 
     def verify(expr)
-      unless expr
-        @errors.push({ :command => @converter.commands[@cmd_num],
-                       :error => "returned false, expecting true" })
-        return false
-      end
-      return true
+      add_error "returned false, expecting true" unless expr
+      return expr
     end
 
     def verify_not(expr)
-      if expr
-        @errors.push({ :command => @converter.commands[@cmd_num],
-                       :error => "returned true, expecting false" })
-        return false
-      end
-      return true
+      add_error "returned true, expecting false" if expr
+      return !expr
     end
 
     def verify_equal(eq, expr)
-      unless eq == expr
-        @errors.push({ :command => @converter.commands[@cmd_num],
-                       :error => "returned '#{expr}', expecting '#{eq}'" })
-        return false
-      end
-      return true
+      add_error "returned '#{expr}', expecting '#{eq}'" unless eq == expr
+      return eq == expr
     end
 
     def verify_not_equal(eq, expr)
-      if eq == expr
-        @errors.push({ :command => @converter.commands[@cmd_num],
-                       :error => "returned '#{expr}', expecting anything but" })
-        return false
-      end
-      return true
+      add_error "returned '#{expr}', expecting anything but" unless eq != expr
+      return eq != expr
     end
   end
 end
