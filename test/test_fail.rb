@@ -22,7 +22,7 @@ class TestFail < Test::Unit::TestCase
         :command=>{
           :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")\n"
         }, 
-        :error=>"returned false, expecting true"
+        :error=>"ERROR command returned false, expecting true"
       }]
       assert @runner.results.size == 1
       assert_equal expected, @runner.results[0][:errors]
@@ -45,7 +45,7 @@ class TestFail < Test::Unit::TestCase
           :selenese=>"assertTextPresent(\"Producer FAIL\")", 
           :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")"
         }, 
-        :error=>"returned false, expecting true"
+        :error=>"ERROR command returned false, expecting true"
       }]
       assert @runner.results.size == 1
       assert_equal expected, @runner.results[0][:errors]
