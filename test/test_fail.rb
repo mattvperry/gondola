@@ -9,7 +9,7 @@ end
 class TestFail < Test::Unit::TestCase
   context "A Ruby Failing Test" do
     setup do
-      @runner = Gondola::TestRunner.new
+      @runner = Gondola::SuiteRunner.new
       @runner.add_test "test/test_projects/example2/gondola_agora_fail.rb"
     end
 
@@ -23,14 +23,14 @@ class TestFail < Test::Unit::TestCase
           :error=>"returned false, expecting true"
         }]
         assert @runner.results.size == 1
-        assert_equal expected, @runner.results[0][:result]
+        assert_equal expected, @runner.results[0][:errors]
       end
     end
   end
 
   context "An HTML Failing Test" do
     setup do
-      @runner = Gondola::TestRunner.new
+      @runner = Gondola::SuiteRunner.new
       @runner.add_test "test/test_projects/example1/gondola_agora_fail.html"
     end
 
@@ -39,13 +39,13 @@ class TestFail < Test::Unit::TestCase
         @runner.run({ :browsers => [{:os => "Windows 2003", :browser => "firefox", :browser_version => "3.6"}] })
         expected = [{
           :command=>{
-            :original=>"assertTextPresent(\"Producer FAIL\")", 
+            :selenese=>"assertTextPresent(\"Producer FAIL\")", 
             :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")"
           }, 
           :error=>"returned false, expecting true"
         }]
         assert @runner.results.size == 1
-        assert_equal expected, @runner.results[0][:result]
+        assert_equal expected, @runner.results[0][:errors]
       end
     end
   end

@@ -28,11 +28,11 @@ class RunCommand < CmdParse::Command
     self.short_desc = "Run an entire test suite or one test case"
     # User supplied options for running a suite
     self.options = CmdParse::OptionParserWrapper.new do |opt|
-      opt.on('-s', '--super_parallel', 'Execute all test cases at once') do |sp|
-        @opts[:super_parallel] = true
-      end
       opt.on('-r', '--recursive', 'Execute all sub suites') do |r|
         @opts[:recursive] = true
+      end
+      opt.on('-q', '--quiet', 'Execute quietly') do |q|
+        @opts[:quiet] = true
       end
     end
   end
@@ -42,6 +42,41 @@ class RunCommand < CmdParse::Command
     "Usage: #{commandparser.program_name} run [options] [tests]"
   end
 
+  # Observer function to watch the progress of runs
+  def update(result)
+    bs = ""
+    result[:browser].each_value { |v| bs = bs + "#{v} " }
+    if result[:status] == :in_progress
+      puts "#{result[:id]}: Started test \"#{result[:name]}\" with #{bs}"
+    else
+      num = result[:errors].size
+      puts "#{result[:id]}: \"#{result[:name]} with #{bs}has completed with #{num} errors"
+    end
+  end
+    
+  # Parse and print results in an organized manner
+  def report(results)
+    puts
+    results.each do |r|
+      puts "Sauce Labs ID: #{r[:id]}"
+      puts "Test Name: #{r[:name]}"
+      bs = ""
+      r[:browser].each_value { |v| bs = bs + "#{v} " }
+      puts "Browser: #{bs}"
+      if r[:status] == :passed
+        puts "Test Passed"
+      else
+        puts "Test Failed - #{r[:errors].size} error(s)"
+        r[:errors].each_with_index do |e,i|
+          puts "- Error #{i+1}:"
+          e[:command].each_pair { |k,v| puts "    #{k.to_s} command: #{v}" }
+          puts "    #{e[:error]}"
+        end
+      end
+      puts
+    end
+  end
+
   # Function that is executed when a user issues a run command
   def execute(args)
     if args.length < 1
@@ -49,7 +84,8 @@ class RunCommand < CmdParse::Command
       exit 1
     end
     # Can either provide directory or file
-    runner = Gondola::TestRunner.new
+    runner = Gondola::SuiteRunner.new
+    runner.add_observer(self) unless @opts[:quiet]
     args.each do |t| 
       if File.exists? t
         runner.add_test t
@@ -58,24 +94,7 @@ class RunCommand < CmdParse::Command
       end
     end
     runner.run(@opts)
-    puts
-    runner.results.each do |r|
-      puts "Sauce Labs ID: #{r[:id]}"
-      puts "Test Name: #{r[:name]}"
-      puts "Browser: #{r[:browser]}"
-      if r[:result] == "OK"
-        puts "Test Passed"
-      else
-        puts "Test Failed - #{r[:result].size} error(s)"
-        r[:result].each_with_index do |e,i|
-          puts "- Error #{i+1}:"
-          puts "    Selenese Command: #{e[:command][:original]}" if e[:command][:original]
-          puts "    Ruby Command: #{e[:command][:ruby]}" if e[:command][:ruby]
-          puts "    #{e[:error]}"
-        end
-      end
-      puts
-    end
+    report(runner.results) unless @opts[:quiet]
   end
 end
 cmd.add_command(RunCommand.new)

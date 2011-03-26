@@ -8,40 +8,60 @@ module Gondola
   end
 
   class Tester
-    attr_reader :cmd_num, :errors, :job_id
+    attr_reader :cmd_num, :errors, :job_id, :status
     attr_accessor :sel
 
-    def initialize(sel, converter)
-      @sel = sel
+    def initialize(req, converter)
+      @sel = Gondola::Selenium.new req
       @converter = converter
       @cmd_num = 0
       @errors = []
     end
 
-    def begin
+    # Start a new Sauce Labs' job and return the session_id
+    def setup
       begin
         @sel.start()
         @job_id = @sel.session_id
+        @status = :in_progress
+      rescue ::Selenium::Client::CommandError => e
+        @errors.push({ :command => @converter.commands[@cmd_num],
+                       :error => e.message })
+        finish
+      end
+      @job_id
+    end
+
+    # Issue all the test commands, catching any errors
+    def begin
+      begin
         eval(@converter.ruby)
       rescue AssertionError => e
       rescue ::Selenium::Client::CommandError => e
         @errors.push({ :command => @converter.commands[@cmd_num],
                        :error => e.message })
       ensure
-        begin
-          if @errors.empty?
-            @sel.passed!
-          else
-            @sel.failed!
-          end
-          @sel.stop()
-        rescue ::Selenium::Client::CommandError => e
-          $stderr.puts e.message + "(Most likely, the test was closed early on Sauce Labs' end)"
-        end
+        finish
       end
     end
 
     private
+
+    # Shutdown the Sauce Labs' job and report the status
+    # of the test
+    def finish
+      begin
+        if @errors.empty?
+          @status = :passed
+          @sel.passed!
+        else
+          @status = :failed
+          @sel.failed!
+        end
+        @sel.stop()
+      rescue ::Selenium::Client::CommandError
+      end
+    end
 
     def cmd_inc
       @cmd_num+=1

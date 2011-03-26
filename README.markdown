@@ -68,7 +68,7 @@ The `[tests]` attribute refers to a list of test cases or test suites:
         {:os => "Windows 2003", :browser => "iexplore", :browser_version => "8" },
     ]
 
-    runner = Gondola::TestRunner.new
+    runner = Gondola::SuiteRunner.new
     runner.add_test "example.html"
     runner.run({:base_url => "http://www.google.com", :browsers => browsers})
     results = runner.results

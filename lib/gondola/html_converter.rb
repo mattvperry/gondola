@@ -50,7 +50,7 @@ module Gondola
             selenese = selenese + ", #{cmd[2]}" if cmd[2] != ""
             selenese = selenese + ")"
             ruby = html_to_ruby(cmd[0], args)
-            @commands.push({ :original => selenese, :ruby => ruby })
+            @commands.push({ :selenese => selenese, :ruby => ruby })
             @ruby << ruby
             @ruby << "\ncmd_inc\n"
           end

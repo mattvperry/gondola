@@ -1,9 +1,11 @@
-# Gondola v2 - testrunner.rb:
+# Gondola v2 - suiterunner.rb:
 #   A wrapper for all the tasks required for launching a run
 #   of a test suite or test case on several browsers
+require 'observer'
 
 module Gondola
-  class TestRunner
+  class SuiteRunner
+    include Observable
     attr_reader :tests, :results
 
     def initialize
@@ -25,31 +27,27 @@ module Gondola
       if @tests.empty?
         puts "No tests to run"
       end
-      # TODO: Need to implement a super-parallel ability( dangerous )
-      if opts[:super_parallel] == true
-        puts "Work in progress, please run again without the super parallel flag"
-      else
-        # Iterate over all tests and dispatch each to Sauce Labs
-        @tests.each do |test|
-          if File.directory? test
-            Dir.chdir(test) do
-              prepend = ""
-              if opts[:recursive] == true
-                prepend = "**/"
-              end
-              files = Dir.glob(prepend + "*.html")
-              files.concat(Dir.glob(prepend + "*.rb"))
-              files.each do |file|
-                converter,global,browsers = aggregate_data(file, opts)
-                run_test(converter, global, browsers)
-              end
+
+      # Iterate over all tests and dispatch each to Sauce Labs
+      @tests.each do |test|
+        if File.directory? test
+          Dir.chdir(test) do
+            prepend = ""
+            if opts[:recursive] == true
+              prepend = "**/"
             end
-          else
-            file = File.basename(test)
-            Dir.chdir(File.dirname(test)) do
-                converter,global,browsers = aggregate_data(file, opts)
-                run_test(converter, global, browsers)
+            files = Dir.glob(prepend + "*.html")
+            files.concat(Dir.glob(prepend + "*.rb"))
+            files.each do |file|
+              converter,global,browsers = aggregate_data(file, opts)
+              run_test(converter, global, browsers)
             end
+          end
+        else
+          file = File.basename(test)
+          Dir.chdir(File.dirname(test)) do
+              converter,global,browsers = aggregate_data(file, opts)
+              run_test(converter, global, browsers)
           end
         end
       end
@@ -66,10 +64,12 @@ module Gondola
       elsif File.extname(file) == '.rb'
         converter = Gondola::Converter.new(file)
       end
+
       # Load file config data
       conf = config_from_file(file)
       # Merge in user-supplied data
       conf.merge! opts
+
       # Set global information
       global = {}
       global[:job_name] = converter.name
@@ -90,6 +90,7 @@ module Gondola
       unless File.directory? file
         return config_from_file(File.expand_path(File.dirname(file)))
       end
+
       # Load any config files in the current directory only if
       # a config hasn't already been found
       conf = {}
@@ -105,6 +106,7 @@ module Gondola
           data = false
         end
       end
+
       # Recurse through the parent directories and merge the
       # current configuration
       unless file == File.dirname(file)
@@ -116,24 +118,35 @@ module Gondola
     # Function to run and parallelize the given test on the given browsers
     def run_test(converter, global, browsers)
       # Spawn n threads
-      Parallel.map(browsers, :in_threads => browsers.size) do |request|
+      Parallel.map(browsers, :in_threads => browsers.size) do |browser|
         # Add global information to this request
-        request.merge! global
-        # Request a new selenium object from Sauce
-        selenium = Gondola::Selenium.new(request)
-        # Begin test using a tester object
-        tester = Gondola::Tester.new(selenium, converter)
-        browser_string = "#{request[:os]} #{request[:browser]} #{request[:browser_version]}"
-        puts "Starting test \"#{converter.name}\" with #{browser_string}"
+        request = browser.merge global
+        # Initialize the tester object with a request and a converter
+        tester = Gondola::Tester.new(request, converter)
+
+        # Initialize test
+        tester.setup
+        changed   # Notify Observers
+        result = { 
+          :id => tester.job_id,
+          :name => global[:job_name], 
+          :browser => browser,
+          :status => tester.status 
+        }
+        # Send information to any observers
+        notify_observers(result)
+
+        # Run test
         tester.begin
-        puts "Test \"#{converter.name}\" on #{browser_string} finished with #{tester.errors.size} error(s)"
-        result = { :name => converter.name, :browser => browser_string, :id => tester.job_id }
-        if tester.errors.empty?
-          result[:result] = "OK"
-        else
-          result[:result] = tester.errors
-        end
-        @results.push(result)
+        changed   # Notify Observers
+        result[:status] = tester.status
+        # Record the results of the test
+        result[:errors] = tester.errors
+        # Send information to any observers
+        notify_observers(result)
+
+        # Add result to the suiterunner's list
+        @results.push result
       end
     end
   end

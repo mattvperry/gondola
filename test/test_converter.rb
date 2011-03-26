@@ -47,6 +47,7 @@ class TestConverter < Test::Unit::TestCase
         cmd_inc
       }.lines.map { |l| l.strip! }.join("\n")
       assert_equal expected, @converter.ruby
+      assert_equal 19, @converter.commands.size
     end
 
     should "properly extract the name of the test from the given file" do
@@ -98,6 +99,7 @@ class TestConverter < Test::Unit::TestCase
         cmd_inc
       }.lines.map { |l| l.strip! }.join("\n")
       assert_equal expected, @converter.ruby
+      assert_equal 17, @converter.commands.size
     end
 
     should "properly extract the name of the test from the given file" do

@@ -1,6 +1,6 @@
 require 'helper'
 
-class MockTestRunner < Gondola::TestRunner
+class MockSuiteRunner < Gondola::SuiteRunner
   attr_accessor :files_ran
 
   def initialize
@@ -14,10 +14,10 @@ class MockTestRunner < Gondola::TestRunner
   end
 end
 
-class TestRunner < Test::Unit::TestCase
+class SuiteRunner < Test::Unit::TestCase
   context "Recursive projects" do
     setup do
-      @runner = MockTestRunner.new
+      @runner = MockSuiteRunner.new
       @runner.add_test "test/test_projects/"
       @runner.run :recursive => true
     end
@@ -34,7 +34,7 @@ class TestRunner < Test::Unit::TestCase
 
   context "Configs" do
     setup do
-      @runner = MockTestRunner.new
+      @runner = MockSuiteRunner.new
       @runner.add_test "test/test_projects/"
     end
 
