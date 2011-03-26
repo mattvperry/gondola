@@ -16,16 +16,16 @@ class TestFail < Test::Unit::TestCase
     should "result in a failing test" do
       VCR.use_cassette('failing_test1', :record => :new_episodes) do
         @runner.run({ :browsers => [{:os => "Windows 2003", :browser => "firefox", :browser_version => "3.6"}] })
-        expected = [{
-          :cmd_num=>12,
-          :command=>{
-            :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")\n"
-          }, 
-          :error=>"returned false, expecting true"
-        }]
-        assert @runner.results.size == 1
-        assert_equal expected, @runner.results[0][:errors]
       end
+      expected = [{
+        :cmd_num=>12,
+        :command=>{
+          :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")\n"
+        }, 
+        :error=>"returned false, expecting true"
+      }]
+      assert @runner.results.size == 1
+      assert_equal expected, @runner.results[0][:errors]
     end
   end
 
@@ -38,17 +38,17 @@ class TestFail < Test::Unit::TestCase
     should "result in a failing test" do
       VCR.use_cassette('failing_test2', :record => :new_episodes) do
         @runner.run({ :browsers => [{:os => "Windows 2003", :browser => "firefox", :browser_version => "3.6"}] })
-        expected = [{
-          :cmd_num=>11,
-          :command=>{
-            :selenese=>"assertTextPresent(\"Producer FAIL\")", 
-            :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")"
-          }, 
-          :error=>"returned false, expecting true"
-        }]
-        assert @runner.results.size == 1
-        assert_equal expected, @runner.results[0][:errors]
       end
+      expected = [{
+        :cmd_num=>11,
+        :command=>{
+          :selenese=>"assertTextPresent(\"Producer FAIL\")", 
+          :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")"
+        }, 
+        :error=>"returned false, expecting true"
+      }]
+      assert @runner.results.size == 1
+      assert_equal expected, @runner.results[0][:errors]
     end
   end
 end
