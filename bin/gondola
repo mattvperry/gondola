@@ -58,7 +58,7 @@ class RunCommand < CmdParse::Command
   # Parse and print results in an organized manner
   def report(results)
     puts
-    @runner.results.each do |r|
+    results.each do |r|
       puts "Sauce Labs ID : #{r[:id]}"
       puts "Test Name     : #{r[:name]}"
       bs = ""
