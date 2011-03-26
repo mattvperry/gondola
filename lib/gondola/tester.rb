@@ -83,22 +83,22 @@ module Gondola
     end
 
     def verify(expr)
-      add_error "returned false, expecting true" unless expr
+      add_error "ERROR command returned false, expecting true" unless expr
       return expr
     end
 
     def verify_not(expr)
-      add_error "returned true, expecting false" if expr
+      add_error "ERROR command returned true, expecting false" if expr
       return !expr
     end
 
     def verify_equal(eq, expr)
-      add_error "returned '#{expr}', expecting '#{eq}'" unless eq == expr
+      add_error "ERROR command returned '#{expr}', expecting '#{eq}'" unless eq == expr
       return eq == expr
     end
 
     def verify_not_equal(eq, expr)
-      add_error "returned '#{expr}', expecting anything but" unless eq != expr
+      add_error "ERROR command returned '#{expr}', expecting anything but" unless eq != expr
       return eq != expr
     end
   end
