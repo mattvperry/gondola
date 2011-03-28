@@ -8,7 +8,7 @@ module Gondola
   end
 
   class Tester
-    attr_reader :cmd_num, :errors, :job_id, :status
+    attr_reader :errors, :job_id, :status
 
     def initialize(req, converter)
       @sel = Gondola::Selenium.new req
@@ -61,16 +61,18 @@ module Gondola
       end
     end
 
-    def cmd_inc
-      @cmd_num+=1
+    def get_eval_cmd_num
+      ev = caller.keep_if { |c| c =~ /\(eval\)/ }[0]
+      ev.match(/:(\d+)/)[1].to_i - 1
     end
 
     # Add the current command to the error list
     # with the given description
     def add_error(desc)
+      cmd_num = get_eval_cmd_num
       @errors.push({ 
-        :cmd_num => @cmd_num,
-        :command => @converter.commands[@cmd_num],
+        :cmd_num => cmd_num,
+        :command => @converter.commands[cmd_num],
         :error => desc 
       })
     end

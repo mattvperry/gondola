@@ -31,12 +31,8 @@ module Gondola
     def ruby
       unless @ruby
         @ruby = ""
-        enum = @body.lines
-        enum.each do |l|
-          if l =~ /#{Regexp.escape(@s_obj)}/
-            @commands.push({ :ruby => l })
-            l = l + "cmd_inc\n"
-          end
+        @body.each_line do |l|
+          @commands.push({ :ruby => l })
           @ruby << l
         end
       end  

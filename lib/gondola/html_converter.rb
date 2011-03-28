@@ -51,8 +51,7 @@ module Gondola
             selenese = selenese + ")"
             ruby = html_to_ruby(cmd[0], args)
             @commands.push({ :selenese => selenese, :ruby => ruby })
-            @ruby << ruby
-            @ruby << "\ncmd_inc\n"
+            @ruby << ruby + "\n"
           end
         end         
       end  
@@ -131,7 +130,7 @@ module Gondola
         # A command with a postfix of AndWait simply adds
         # a second command which waits a certain time
         firstPart = html_to_ruby($1, args)
-        secondPart = "\n#{@s_obj}.wait_for_page_to_load \"30000\""
+        secondPart = "; #{@s_obj}.wait_for_page_to_load \"30000\""
         return firstPart + secondPart
 
         # store command
