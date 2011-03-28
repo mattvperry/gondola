@@ -33,8 +33,10 @@ module Gondola
         @ruby = ""
         enum = @body.lines
         enum.each do |l|
-          @commands.push({ :ruby => l })
-          l = l + "cmd_inc\n"
+          if l =~ /#{Regexp.escape(@s_obj)}/
+            @commands.push({ :ruby => l })
+            l = l + "cmd_inc\n"
+          end
           @ruby << l
         end
       end  
