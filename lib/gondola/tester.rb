@@ -24,6 +24,7 @@ module Gondola
         @job_id = @sel.session_id
         @status = :in_progress
       rescue ::Selenium::Client::CommandError => e
+        @status = :not_started
         add_error e.message
         finish
       end

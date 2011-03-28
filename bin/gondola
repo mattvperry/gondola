@@ -49,6 +49,8 @@ class RunCommand < CmdParse::Command
     result[:browser].each_value { |v| bs = bs + "#{v} " }
     if result[:status] == :in_progress
       puts "#{result[:id]}: Started test \"#{result[:name]}\" with #{bs}"
+    elsif result[:status] == :not_started
+      puts "#{result[:id]}: \"#{result[:name]}\" failed to start"
     else
       num = result[:errors].size
       puts "#{result[:id]}: \"#{result[:name]}\" with #{bs}has completed with #{num} errors"
