@@ -18,7 +18,7 @@ class TestFail < Test::Unit::TestCase
         @runner.run({ :browsers => [{:os => "Windows 2003", :browser => "firefox", :browser_version => "3.6"}] })
       end
       expected = [{
-        :cmd_num=>12,
+        :cmd_num=>13,
         :command=>{
           :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")\n"
         }, 
@@ -40,7 +40,7 @@ class TestFail < Test::Unit::TestCase
         @runner.run({ :browsers => [{:os => "Windows 2003", :browser => "firefox", :browser_version => "3.6"}] })
       end
       expected = [{
-        :cmd_num=>11,
+        :cmd_num=>12,
         :command=>{
           :selenese=>"assertTextPresent(\"Producer FAIL\")", 
           :ruby=>"assert @sel.is_text_present(\"Producer FAIL\")"

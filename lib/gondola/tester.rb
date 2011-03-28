@@ -63,7 +63,7 @@ module Gondola
 
     def get_eval_cmd_num
       ev = caller.keep_if { |c| c =~ /\(eval\)/ }[0]
-      ev.match(/:(\d+)/)[1].to_i - 1
+      ev.match(/:(\d+)/)[1].to_i
     end
 
     # Add the current command to the error list
@@ -72,7 +72,7 @@ module Gondola
       cmd_num = get_eval_cmd_num
       @errors.push({ 
         :cmd_num => cmd_num,
-        :command => @converter.commands[cmd_num],
+        :command => @converter.commands[cmd_num-1],
         :error => desc 
       })
     end
