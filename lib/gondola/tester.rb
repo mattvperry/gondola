@@ -25,7 +25,7 @@ module Gondola
         @status = :in_progress
       rescue ::Selenium::Client::CommandError => e
         @status = :not_started
-        add_error e.message
+        add_error e.message, e.backtrace
         finish
       end
       @job_id
@@ -37,7 +37,7 @@ module Gondola
         eval(@converter.ruby)
       rescue AssertionError
       rescue ::Selenium::Client::CommandError => e
-        add_error e.message
+        add_error e.message, e.backtrace
       ensure
         finish
       end
@@ -61,15 +61,15 @@ module Gondola
       end
     end
 
-    def get_eval_cmd_num
-      ev = caller.keep_if { |c| c =~ /\(eval\)/ }[0]
+    def get_cmd_num(trace)
+      ev = trace.delete_if { |c| !(c =~ /\(eval\)/) }[0]
       ev.match(/:(\d+)/)[1].to_i
     end
 
     # Add the current command to the error list
     # with the given description
-    def add_error(desc)
-      cmd_num = get_eval_cmd_num
+    def add_error(desc, trace=caller)
+      cmd_num = get_cmd_num(trace)
       @errors.push({ 
         :cmd_num => cmd_num,
         :command => @converter.commands[cmd_num-1],
