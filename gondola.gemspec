@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gondola}
-  s.version = "1.2.4"
+  s.version = "1.2.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matthew Perry"]
-  s.date = %q{2011-03-28}
+  s.date = %q{2011-03-31}
   s.default_executable = %q{gondola}
   s.description = %q{
     Gondola is Ruby command line utility and as well as a library  which helps
@@ -71,16 +71,16 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<sauce>, [">= 0.19.0"])
-      s.add_runtime_dependency(%q<parallel>, [">= 0.5.2"])
+      s.add_runtime_dependency(%q<sauce>, ["~> 0.19.0"])
+      s.add_runtime_dependency(%q<parallel>, ["~> 0.5.2"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_development_dependency(%q<vcr>, ["~> 1.7.1"])
       s.add_development_dependency(%q<fakeweb>, ["~> 1.3.0"])
     else
-      s.add_dependency(%q<sauce>, [">= 0.19.0"])
-      s.add_dependency(%q<parallel>, [">= 0.5.2"])
+      s.add_dependency(%q<sauce>, ["~> 0.19.0"])
+      s.add_dependency(%q<parallel>, ["~> 0.5.2"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -88,8 +88,8 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<fakeweb>, ["~> 1.3.0"])
     end
   else
-    s.add_dependency(%q<sauce>, [">= 0.19.0"])
-    s.add_dependency(%q<parallel>, [">= 0.5.2"])
+    s.add_dependency(%q<sauce>, ["~> 0.19.0"])
+    s.add_dependency(%q<parallel>, ["~> 0.5.2"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
