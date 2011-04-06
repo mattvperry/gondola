@@ -138,7 +138,7 @@ module Gondola
         notify_observers(result)
 
         # Run test
-        tester.begin unless result[:errors].size
+        tester.begin if result[:errors].empty?
         changed   # Notify Observers
         result[:status] = tester.status
         # Record the results of the test
