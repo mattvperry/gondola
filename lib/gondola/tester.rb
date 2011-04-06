@@ -26,7 +26,6 @@ module Gondola
       rescue ::Selenium::Client::CommandError => e
         @status = :not_started
         add_error e.message, e.backtrace
-        finish
       end
       @job_id
     end
@@ -63,6 +62,7 @@ module Gondola
 
     def get_cmd_num(trace)
       ev = trace.delete_if { |c| !(c =~ /\(eval\)/) }[0]
+      return 0 unless ev
       ev.match(/:(\d+)/)[1].to_i
     end
 
@@ -70,11 +70,19 @@ module Gondola
     # with the given description
     def add_error(desc, trace=caller)
       cmd_num = get_cmd_num(trace)
-      @errors.push({ 
-        :cmd_num => cmd_num,
-        :command => @converter.commands[cmd_num-1],
-        :error => desc 
-      })
+      unless cmd_num == 0
+        @errors.push({ 
+          :cmd_num => cmd_num,
+          :command => @converter.commands[cmd_num-1],
+          :error => desc 
+        })
+      else
+        @errors.push({ 
+          :cmd_num => cmd_num,
+          :command => "@sel.start()",
+          :error => desc 
+        })
+      end
     end
 
     # Handle all the assert functions by just making the respective

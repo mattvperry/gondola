@@ -131,13 +131,14 @@ module Gondola
           :id => tester.job_id,
           :name => global[:job_name], 
           :browser => browser,
-          :status => tester.status 
+          :status => tester.status, 
+          :errors => tester.errors
         }
         # Send information to any observers
         notify_observers(result)
 
         # Run test
-        tester.begin
+        tester.begin unless result[:errors].size
         changed   # Notify Observers
         result[:status] = tester.status
         # Record the results of the test
