@@ -70,19 +70,11 @@ module Gondola
     # with the given description
     def add_error(desc, trace=caller)
       cmd_num = get_cmd_num(trace)
-      unless cmd_num == 0
-        @errors.push({ 
-          :cmd_num => cmd_num,
-          :command => @converter.commands[cmd_num-1],
-          :error => desc 
-        })
-      else
-        @errors.push({ 
-          :cmd_num => cmd_num,
-          :command => "@sel.start()",
-          :error => desc 
-        })
-      end
+      @errors.push({ 
+        :cmd_num => cmd_num,
+        :command => cmd_num ? @converter.commands[cmd_num-1] : "@sel.start()",
+        :error => desc 
+      })
     end
 
     # Handle all the assert functions by just making the respective
