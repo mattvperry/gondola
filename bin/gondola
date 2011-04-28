@@ -26,7 +26,7 @@ class RunCommand < CmdParse::Command
     super('run', false)
     @opts = {}
     @quiet = false
-    self.short_desc = "Run an entire test suite or one test case"
+    self.short_desc = "Run a test case or suite"
     # User supplied options for running a suite
     self.options = CmdParse::OptionParserWrapper.new do |opt|
       opt.on('-r', '--recursive', 'Execute all sub suites') do |r|
@@ -43,48 +43,6 @@ class RunCommand < CmdParse::Command
     "Usage: #{commandparser.program_name} run [options] [tests]"
   end
 
-  # Observer function to watch the progress of runs
-  def update(result)
-    bs = ""
-    result[:browser].each_value { |v| bs = bs + "#{v} " }
-    if result[:status] == :in_progress
-      puts "#{result[:id]}: Started test \"#{result[:name]}\" with #{bs}"
-    elsif result[:status] == :not_started
-      puts "#{result[:id]}: \"#{result[:name]}\" failed to start"
-    else
-      num = result[:errors].size
-      puts "#{result[:id]}: \"#{result[:name]}\" with #{bs}has completed with #{num} errors"
-    end
-  end
-    
-  # Parse and print results in an organized manner
-  def report(results)
-    puts
-    results.each do |r|
-      puts "Sauce Labs ID : #{r[:id]}"
-      puts "Test Name     : #{r[:name]}"
-      bs = ""
-      r[:browser].each_value { |v| bs = bs + "#{v} " }
-      puts "Browser       : #{bs}"
-      if r[:status] == :passed
-        puts "Status        : Test Passed"
-      else
-        puts "Status        : Test Failed - #{r[:errors].size} error(s)"
-        r[:errors].each_with_index do |e,i|
-          puts "- Error #{i+1}, Command number #{e[:cmd_num]}:"
-          max_key = 0
-          e[:command].each_key { |k| max_key = k.size if k.size > max_key }
-          max_key = -1 * (max_key + 8)
-          e[:command].each_pair do |k,v| 
-            puts "    %1$*2$s : #{v}" % [ "#{k.capitalize} command", max_key ]
-          end
-          puts "    #{e[:error]}"
-        end
-      end
-      puts
-    end
-  end
-
   # Function that is executed when a user issues a run command
   def execute(args)
     if args.length < 1
@@ -92,18 +50,23 @@ class RunCommand < CmdParse::Command
       exit 1
     end
     # Can either provide directory or file
-    runner = Gondola::SuiteRunner.new
-    runner.add_observer(self) unless @quiet
-    args.each do |t| 
-      if File.exists? t
-        runner.add_test t
-      else
-        puts "Could not find \"#{t}\""
+    Gondola::SuiteRunner.new do |runner|
+      unless @quiet
+        runner.on_change do |result|
+          Gondola::Results::Console.change result
+        end
+        runner.on_completion do |results|
+          Gondola::Results::Console.completion results
+        end
       end
+      runner.on_error do |error|
+        Gondola::Results::Console.error error
+      end
+
+      runner.add_tests *args
+      puts "Contacting Sauce Labs, please wait..." unless @quiet
+      runner.run @opts
     end
-    puts "Contacting Sauce Labs, please wait..." unless @quiet
-    runner.run(@opts)
-    report(runner.results) unless @quiet
   end
 end
 cmd.add_command(RunCommand.new)

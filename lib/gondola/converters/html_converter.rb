@@ -2,7 +2,7 @@
 #   Class definition for turning Selenium HTML into
 #   webdriver ruby code
 
-module Gondola
+class Gondola
   class HtmlConverter < Gondola::Converter
     # Function: name
     # Returns the name of this test case

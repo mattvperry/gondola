@@ -1,22 +1,27 @@
 # Gondola v2 - suiterunner.rb:
 #   A wrapper for all the tasks required for launching a run
 #   of a test suite or test case on several browsers
-require 'observer'
 
-module Gondola
+class Gondola
   class SuiteRunner
-    include Observable
     attr_reader :tests, :results
 
     def initialize
       @tests = []
       @results = []
+      yield self if block_given?
     end
 
     # Function to add a test to the member array of
     # tests for this test run
-    def add_test(file)
-      @tests.push(file)
+    def add_tests(*files)
+      files.each do |file|
+        unless File.exists? file
+          @error.call "Could not find \"#{file}\"" unless @error.nil?
+          next
+        end
+        @tests << file
+      end
     end
 
     # Function to run all tests that have been added
@@ -38,6 +43,7 @@ module Gondola
             end
             files = Dir.glob(prepend + "*.html")
             files.concat(Dir.glob(prepend + "*.rb"))
+            @error.call "No runnable files in \"#{file}\"" if files.empty? and !@error.nil?
             files.each do |file|
               converter,global,browsers = aggregate_data(file, opts)
               run_test(converter, global, browsers)
@@ -51,6 +57,24 @@ module Gondola
           end
         end
       end
+
+      # Run the supplied completion block
+      @complete.call @results unless @complete.nil?
+    end
+
+    # Set a block for executing when a change occurs
+    def on_change(&change_block)
+      @change = change_block
+    end
+
+    # Set a block for executing when the run is complete
+    def on_completion(&complete_block)
+      @complete = complete_block
+    end
+
+    # Set a block for executing when there is a problem
+    def on_error(&error_block)
+      @error = error_block
     end
 
     private
@@ -126,7 +150,6 @@ module Gondola
 
         # Initialize test
         tester.setup
-        changed   # Notify Observers
         result = { 
           :id => tester.job_id,
           :name => global[:job_name], 
@@ -135,19 +158,18 @@ module Gondola
           :errors => tester.errors
         }
         # Send information to any observers
-        notify_observers(result)
+        @change.call result unless @change.nil?
 
         # Run test
         tester.begin if result[:errors].empty?
-        changed   # Notify Observers
         result[:status] = tester.status
         # Record the results of the test
         result[:errors] = tester.errors
         # Send information to any observers
-        notify_observers(result)
+        @change.call result unless @change.nil?
 
         # Add result to the suiterunner's list
-        @results.push result
+        @results << result
       end
     end
   end

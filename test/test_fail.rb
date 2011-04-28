@@ -10,7 +10,7 @@ class TestFail < Test::Unit::TestCase
   context "A Ruby Failing Test" do
     setup do
       @runner = Gondola::SuiteRunner.new
-      @runner.add_test "test/test_projects/example2/gondola_agora_fail.rb"
+      @runner.add_tests "test/test_projects/example2/gondola_agora_fail.rb"
     end
 
     should "result in a failing test" do
@@ -32,7 +32,7 @@ class TestFail < Test::Unit::TestCase
   context "An HTML Failing Test" do
     setup do
       @runner = Gondola::SuiteRunner.new
-      @runner.add_test "test/test_projects/example1/gondola_agora_fail.html"
+      @runner.add_tests "test/test_projects/example1/gondola_agora_fail.html"
     end
 
     should "result in a failing test" do

@@ -1,0 +1,1 @@
+require 'gondola/results/console'

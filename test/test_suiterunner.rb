@@ -18,7 +18,7 @@ class SuiteRunner < Test::Unit::TestCase
   context "Recursive projects" do
     setup do
       @runner = MockSuiteRunner.new
-      @runner.add_test "test/test_projects/"
+      @runner.add_tests "test/test_projects/"
       @runner.run :recursive => true
     end
 
@@ -35,7 +35,7 @@ class SuiteRunner < Test::Unit::TestCase
   context "Configs" do
     setup do
       @runner = MockSuiteRunner.new
-      @runner.add_test "test/test_projects/"
+      @runner.add_tests "test/test_projects/"
     end
 
     should "extract data from config files and merge correctly" do

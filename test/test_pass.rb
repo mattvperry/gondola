@@ -10,7 +10,7 @@ class TestPass < Test::Unit::TestCase
   context "A Ruby Passing Test" do
     setup do
       @runner = Gondola::SuiteRunner.new
-      @runner.add_test "test/test_projects/example2/gondola_agora_pass.rb"
+      @runner.add_tests "test/test_projects/example2/gondola_agora_pass.rb"
     end
 
     should "result in a passing test" do
@@ -25,7 +25,7 @@ class TestPass < Test::Unit::TestCase
   context "An HTML Passing Test" do
     setup do
       @runner = Gondola::SuiteRunner.new
-      @runner.add_test "test/test_projects/example1/gondola_agora_pass.html"
+      @runner.add_tests "test/test_projects/example1/gondola_agora_pass.html"
     end
 
     should "result in a passing test" do

@@ -3,12 +3,14 @@
 #   for asserting and verifying various functions without
 #   the need for a unit testing framework
 
-module Gondola
+class Gondola
   class AssertionError < RuntimeError
   end
 
   class Tester
     attr_reader :errors, :job_id, :status
+
+    SELENIUM_OBJECT = "@sel"
 
     def initialize(req, converter)
       @sel = Gondola::Selenium.new req
@@ -20,7 +22,7 @@ module Gondola
     # Start a new Sauce Labs' job and return the session_id
     def setup
       begin
-        @sel.start()
+        @sel.start
         @job_id = @sel.session_id
         @status = :in_progress
       rescue ::Selenium::Client::CommandError => e
@@ -33,7 +35,7 @@ module Gondola
     # Issue all the test commands, catching any errors
     def begin
       begin
-        eval(@converter.ruby)
+        eval @converter.ruby
       rescue AssertionError
       rescue ::Selenium::Client::CommandError => e
         add_error e.message, e.backtrace
@@ -55,7 +57,7 @@ module Gondola
           @status = :failed
           @sel.failed!
         end
-        @sel.stop()
+        @sel.stop
       rescue ::Selenium::Client::CommandError
       end
     end
@@ -72,7 +74,7 @@ module Gondola
       cmd_num = get_cmd_num(trace)
       @errors.push({ 
         :cmd_num => cmd_num,
-        :command => cmd_num ? @converter.commands[cmd_num-1] : "@sel.start()",
+        :command => cmd_num ? @converter.commands[cmd_num-1] : "#{SELENIUM_OBJECT}.start",
         :error => desc 
       })
     end

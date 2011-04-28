@@ -3,7 +3,7 @@
 #   gem's default error reporting behaviors.
 require 'sauce/selenium'
 
-module Gondola
+class Gondola
   class Selenium < ::Sauce::Selenium
 
     # Same function definition as the selenium gem but without

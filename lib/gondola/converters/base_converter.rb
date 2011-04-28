@@ -1,21 +1,21 @@
-# Gondola - converter.rb:
+# Gondola - base_converter.rb:
 #   Class definition for turning one format into
 #   another
 
-module Gondola
+class Gondola
   class Converter
     attr_writer :name
     attr_reader :file, :commands
 
     # Constructor that opens a file
-    def initialize(filename, sel="@sel")
+    def initialize(filename)
       File.open(filename, "r") do |f|
         @body = f.read
       end
       @commands = []
-      @s_obj = sel
+      @s_obj = Gondola::Tester::SELENIUM_OBJECT
       @file = filename
-      ruby()
+      ruby
     end
 
     def name
@@ -32,7 +32,7 @@ module Gondola
       unless @ruby
         @ruby = ""
         @body.each_line do |l|
-          @commands.push({ :ruby => l })
+          @commands << {:ruby => l}
           @ruby << l
         end
       end  

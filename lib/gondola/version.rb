@@ -1,3 +1,3 @@
-module Gondola
+class Gondola
     VERSION = "1.2.5"
 end
