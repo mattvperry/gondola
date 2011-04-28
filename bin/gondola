@@ -40,7 +40,7 @@ class RunCommand < CmdParse::Command
 
   # Proper usage format
   def usage
-    puts "Usage: #{commandparser.program_name} run [options] [tests]"
+    "Usage: #{commandparser.program_name} run [options] [tests]"
   end
 
   # Function that is executed when a user issues a run command
@@ -79,7 +79,7 @@ class ProjectCommand < CmdParse::Command
   end
 
   def usage
-    puts "Usage: #{commandparser.program_name} new project [name]"
+    "Usage: #{commandparser.program_name} new project [name]"
   end
 
   def execute(args)
@@ -98,6 +98,10 @@ class NewCommand < CmdParse::Command
     super('new', true)
     self.short_desc = "Creates a new entity"
     self.add_command(ProjectCommand.new)
+  end
+
+  def usage
+    "Usage: #{commandparser.program_name} new COMMAND [args]"
   end
 end
 cmd.add_command(NewCommand.new)
