@@ -67,17 +67,21 @@ The `[tests]` attribute refers to a list of test cases or test suites:
         {:os => "Windows 2003", :browser => "iexplore", :browser_version => "8" },
     ]
 
-    runner = Gondola::SuiteRunner.new
-    runner.add_test "example.html"
-    runner.run({:base_url => "http://www.google.com", :browsers => browsers})
-    results = runner.results
+    Gondola::SuiteRunner.new do |runner|
+      runner.on_change do |result|
+        Gondola::Results::Console.change result
+      end
+      runner.on_completion do |results|
+        Gondola::Results::Console.completion results
+      end
+      runner.on_error do |error|
+        Gondola::Results::Console.error error
+      end
 
-The above code does several things:
-
-* `runner.add_test "example.html"` adds the test case "example.html" to the list of tests that this runner will execute when you tell it to
-* `runner.run(opts={})` runs all the tests that you've added with the options specified. The list of available options is long and a work in progress
-  with the rest of the documentation.
-* `runner.results` returns a multidimentional array of hashes which contain detailed reports of how each test performed on each browser
+      runner.add_tests "example1.html", "example2.html"
+      puts "Contacting Sauce Labs, please wait..."
+      runner.run({:base_url => "http://www.google.com", :browsers => browsers})
+    end
 
 The end result here is that the test case that you have written with Selenium IDE, "example.html", is converted to ruby on the fly and then sent
 to Sauce Labs with two browser settings in parallel.
