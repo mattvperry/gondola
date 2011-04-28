@@ -125,10 +125,7 @@ class Gondola
             api = false
           end
         end
-        if File.exists? "config.yml"
-          conf.merge! YAML.load_file("config.yml")
-          data = false
-        end
+        conf.merge! YAML.load_file("config.yml") if File.exists? "config.yml"
       end
 
       # Recurse through the parent directories and merge the

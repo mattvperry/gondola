@@ -50,7 +50,7 @@ class RunCommand < CmdParse::Command
       exit 1
     end
     # Can either provide directory or file
-    Gondola::SuiteRunner.new do |runner|
+    Gondola.new do |runner|
       unless @quiet
         runner.on_change do |result|
           Gondola::Results::Console.change result
@@ -72,4 +72,3 @@ end
 cmd.add_command(RunCommand.new)
 
 cmd.parse
-exit(0)

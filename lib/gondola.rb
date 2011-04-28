@@ -14,4 +14,10 @@ require 'sauce'
 require 'parallel'
 
 class Gondola
+  attr_reader :runner
+
+  def initialize
+    @runner = Gondola::SuiteRunner.new
+    yield @runner if block_given?
+  end
 end
