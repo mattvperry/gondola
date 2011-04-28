@@ -40,13 +40,13 @@ class RunCommand < CmdParse::Command
 
   # Proper usage format
   def usage
-    "Usage: #{commandparser.program_name} run [options] [tests]"
+    puts "Usage: #{commandparser.program_name} run [options] [tests]"
   end
 
   # Function that is executed when a user issues a run command
   def execute(args)
     if args.length < 1
-      puts usage
+      usage
       exit 1
     end
     # Can either provide directory or file
@@ -70,5 +70,36 @@ class RunCommand < CmdParse::Command
   end
 end
 cmd.add_command(RunCommand.new)
+
+# New Project command
+class ProjectCommand < CmdParse::Command
+  def initialize
+    super('project', false)
+    self.short_desc = "Creates a new project folder"
+  end
+
+  def usage
+    puts "Usage: #{commandparser.program_name} new project [name]"
+  end
+
+  def execute(args)
+    if args.length < 1
+      usage
+      exit 1
+    end
+
+    args.each { |p| Dir.mkdir p }
+  end
+end
+
+# New command
+class NewCommand < CmdParse::Command
+  def initialize
+    super('new', true)
+    self.short_desc = "Creates a new entity"
+    self.add_command(ProjectCommand.new)
+  end
+end
+cmd.add_command(NewCommand.new)
 
 cmd.parse
