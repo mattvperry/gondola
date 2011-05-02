@@ -88,7 +88,25 @@ class ProjectCommand < CmdParse::Command
       exit 1
     end
 
-    args.each { |p| Dir.mkdir p }
+    args.each do |dir| 
+      begin
+        Dir.mkdir dir
+      rescue Errno::EEXIST
+        puts "This project already exists"
+        exit 1
+      end
+      puts "Creating new project #{dir.inspect}"
+      print "Base Url: "
+      base_url = $stdin.gets.chomp
+      File.open(File.join(dir, "config.yml"), "w") do |f|
+        yaml = Gondola::DEFAULT_CONFIG.merge({
+          :project_name => dir,
+          :base_url => base_url
+        })
+        YAML.dump(yaml, f)
+      end
+      puts "Project created"
+    end
   end
 end
 
