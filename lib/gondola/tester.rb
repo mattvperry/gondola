@@ -27,7 +27,17 @@ class Gondola
         @status = :in_progress
       rescue ::Selenium::Client::CommandError => e
         @status = :not_started
-        add_error e.message, e.backtrace
+        @errors << {
+          :cmd_num => 0,
+          :command => "#{SELENIUM_OBJECT}.start",
+          :error => e.message
+        }
+      rescue Timeout::Error => e
+        @errors << {
+          :cmd_num => 0,
+          :command => "#{SELENIUM_OBJECT}.start",
+          :error => "ERROR: Command timed out"
+        }
       end
       @job_id
     end
@@ -38,7 +48,9 @@ class Gondola
         eval @converter.ruby
       rescue AssertionError
       rescue ::Selenium::Client::CommandError => e
-        add_error e.message, e.backtrace
+        add_error_with_trace e.message, e.backtrace
+      rescue Timeout::Error => e
+        add_error_with_trace "ERROR: Command timed out", e.backtrace
       ensure
         finish
       end
@@ -58,7 +70,18 @@ class Gondola
           @sel.failed!
         end
         @sel.stop
-      rescue ::Selenium::Client::CommandError
+      rescue ::Selenium::Client::CommandError => e
+        @errors << {
+          :cmd_num => 0,
+          :command => "",
+          :error => e.message
+        }
+      rescue Timeout::Error => e
+        @errors << {
+          :cmd_num => 0,
+          :command => "",
+          :error => "ERROR: Command timed out"
+        }
       end
     end
 
@@ -70,13 +93,13 @@ class Gondola
 
     # Add the current command to the error list
     # with the given description
-    def add_error(desc, trace=caller)
+    def add_error_with_trace(desc, trace=caller)
       cmd_num = get_cmd_num(trace)
-      @errors.push({ 
+      @errors.push << { 
         :cmd_num => cmd_num,
-        :command => cmd_num ? @converter.commands[cmd_num-1] : "#{SELENIUM_OBJECT}.start",
+        :command => @converter.commands[cmd_num-1],
         :error => desc 
-      })
+      }
     end
 
     # Handle all the assert functions by just making the respective
@@ -88,22 +111,22 @@ class Gondola
     end
 
     def verify(expr)
-      add_error "ERROR: Command returned false, expecting true" unless expr
+      add_error_with_trace "ERROR: Command returned false, expecting true" unless expr
       return expr
     end
 
     def verify_not(expr)
-      add_error "ERROR: Command returned true, expecting false" if expr
+      add_error_with_trace "ERROR: Command returned true, expecting false" if expr
       return !expr
     end
 
     def verify_equal(eq, expr)
-      add_error "ERROR: Command returned '#{expr}', expecting '#{eq}'" unless eq == expr
+      add_error_with_trace "ERROR: Command returned '#{expr}', expecting '#{eq}'" unless eq == expr
       return eq == expr
     end
 
     def verify_not_equal(eq, expr)
-      add_error "ERROR: Command returned '#{expr}', expecting anything but" unless eq != expr
+      add_error_with_trace "ERROR: Command returned '#{expr}', expecting anything but" unless eq != expr
       return eq != expr
     end
   end
